@@ -66,7 +66,8 @@ El principal valor técnico del proyecto es la transformación de datos público
   - `JOIN` multinivel para relacionar entidades geográficas y de atención.
   - Clasificación de países por volumen (`Alta`, `Media`, `Baja`) mediante `CASE`.
   - Agregaciones con `GROUP BY` y `HAVING` para identificar nodos de saturación (CAT Florida / Comuna 1).
-- 📁 [`/sql/trabajo_practico_sql.sql`](./sql/)
+- 📄 **Trabajo práctico completo (con capturas del proceso):** [`SQL_Trabajo_Practico.docx`](./SQL_Trabajo_Practico.docx)
+- 📁 **Script con todas las consultas:** [`trabajo_practico_sql.sql`](./trabajo_practico_sql.sql)
 
 ### 🟡 Módulo 3: Pipeline de limpieza y ETL (Python / Pandas) — *En desarrollo*
 

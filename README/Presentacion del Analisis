@@ -61,11 +61,13 @@ El principal valor técnico del proyecto es la transformación de datos público
 
 ### 🔵 Módulo 2: Modelado relacional y consultas avanzadas (SQL) — *En desarrollo*
 
-- **Objetivo:** estructurar datos planos en un modelo de 5 tablas (`visitas`, `cat`, `barrios`, `comunas`, `paises`).
-- **Habilidades demostradas:**
-  - `JOIN` multinivel para relacionar entidades geográficas y de atención.
-  - Clasificación de países por volumen (`Alta`, `Media`, `Baja`) mediante `CASE`.
-  - Agregaciones con `GROUP BY` y `HAVING` para identificar nodos de saturación (CAT Florida / Comuna 1).
+- **Base de datos:** encuesta CAT 2017, trabajada de forma independiente para contrastar sus resultados con los de los Módulos 1 Y 3 (2016-2019).
+- **Objetivo:** estructurar datos planos en un modelo relacional de 5 tablas (`visitas`, `cat`, `barrios`, `comunas`, `paises`) y responder preguntas de negocio mediante consultas SQL de complejidad creciente.
+- **Habilidades demostradas y hallazgos:**
+  - `JOIN` multinivel para relacionar puntos CAT, barrios y comunas, y para vincular cada visita con su país de procedencia.
+  - Clasificación de países por volumen de visitas (`Baja`: menos de 20, `Media`: entre 20 y 50, `Alta`: más de 50) mediante `CASE`.
+  - `GROUP BY` y `HAVING` para filtrar los países con más de 100 visitas y rankear los puntos CAT por demanda: **CAT Florida** es el que más pasajeros concentra (1.812).
+  - Distinción entre *visitas* (consultas registradas) y *pasajeros* (personas que acompañan al turista en cada consulta), por lo que el total de pasajeros supera al de visitas.
 - 📄 **Trabajo práctico completo (con capturas del proceso):** [`SQL_Trabajo_Practico.docx`](./SQL_Trabajo_Practico.docx)
 - 📁 **Script con todas las consultas:** [`trabajo_practico_sql.sql`](./trabajo_practico_sql.sql)
 

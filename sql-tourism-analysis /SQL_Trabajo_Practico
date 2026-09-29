@@ -1,0 +1,209 @@
+🔵 Módulo 2: Modelado relacional y consultas avanzadas (SQL)
+
+TRABAJO PRÁCTICO SQL - Centro de Atención Turística – GCBA (2017 - 2018)
+
+## Objetivo 
+Utilizar SQL para consultar, relacionar y analizar información sobre los Puntos CAT, su localización y las visitas registradas. A lo largo del trabajo se utilizarán progresivamente:
+SELECT → WHERE → ORDER BY → GROUP BY → funciones de agregación → JOIN → HAVING → subconsultas → CASE
+
+ 
+## Parte 1 – Análisis Descriptivo
+  
+⦁	Listar todos los Puntos CAT registrados en la base. 
+SELECT * FROM cat;               
+
+⦁	Mostrar solamente el id y nombre de cada Punto CAT.
+SELECT id_cat, cat FROM cat; 
+
+⦁	Mostrar solamente el id y nombre de cada Punto CAT.
+SELECT id_cat, cat FROM cat;  
+
+⦁	Mostrar todos los barrios registrados.
+SELECT * FROM barrios;  
+
+⦁	Mostrar los países registrados en la base.
+SELECT * FROM paises; 
+
+⦁	Mostrar los diferentes países registrados en las visitas(para evitar ids repetidos)
+SELECT DISTINCT id_pais FROM visitas;    
+
+⦁	¿Y si en ves de los ids del punto anterior quiero ver el nombre del país? 
+SELECT DISTINCT v.id_pais, p.pais
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+ORDER BY v.id_pais; 
+
+⦁	Listar los Puntos CAT ordenados alfabéticamente.
+SELECT * FROM cat ORDER BY cat ASC;  
+
+⦁	Listar los Puntos CAT en orden alfabético inverso.
+SELECT * FROM cat ORDER BY cat DESC;
+
+⦁	Mostrar los puntos cay cuyo nombre comienza con la letra “A”
+SELECT * FROM cat WHERE cat LIKE 'A%';
+
+⦁	Mostrar sólo las primeras 10 visitas/registros
+SELECT * FROM visitas LIMIT 10; 
+
+⦁	Mostrar los 5 primeros Puntos CAT ordenados alfabéticamente.
+SELECT * FROM cat ORDER BY cat ASC LIMIT 5;
+   
+
+## Parte 2 - ¿Qué cuentan nuestros datos? COUNT - SUM - AVG  - MIN  - MAX - GROUP BY  -HAVING
+  
+⦁	Obtener la cantidad total de Puntos CAT.
+SELECT COUNT(*) AS cantidad_centros FROM cat;                   
+
+⦁	¿Cuántos barrios hay?
+SELECT COUNT(*) AS cantidad_barrios FROM barrios; 
+
+⦁	¿Cuántos países aparecen?
+SELECT COUNT(*) AS cantidad_paises FROM paises; 
+
+⦁	Obtener la cantidad total de registros de visitas.
+SELECT COUNT(*) AS cantidad_visitas FROM visitas; 
+
+⦁	Obtener la cantidad total de pasajeros de esas visitas.
+SELECT SUM(pasajeros) AS total_pasajeros FROM visitas;
+ 
+
+⦁	¿"cantidad de visitas" y "cantidad de pasajeros" representan necesariamente lo mismo?
+No. Cuando hablamos de Visitas es una consulta en centro cat. A diferencia de Pasajeros es la cantidad de personas que acompañaban a ese turista en esa consulta.
+Por eso el total de pasajeros es mayor que el total de visitas.
+
+    
+⦁	Cantidad mínima, máxima y promedio de pasajeros por visita
+SELECT MIN(pasajeros) AS minimo
+FROM visitas;
+
+SELECT MAX(pasajeros) AS maximo
+FROM visitas;
+
+SELECT AVG(pasajeros) AS promedio
+FROM visitas;          
+
+## Parte 3 – Frecuencias y algo más
+  
+⦁	¿Cuántos registros tiene cada país?
+SELECT p.pais, COUNT(*) AS cantidad_visitas
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+GROUP BY p.pais;
+
+⦁	¿Cuántos pasajeros corresponden a cada país?
+SELECT p.pais, SUM(v.pasajeros) AS total_pasajeros
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+GROUP BY p.pais
+ORDER BY total_pasajeros DESC;
+
+⦁	Promedio de pasajeros por país
+SELECT p.pais, AVG(v.pasajeros) AS promedio_pasajeros
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+GROUP BY p.pais
+ORDER BY promedio_pasajeros DESC;
+           
+⦁	Visitas en cada CAT
+SELECT c.cat, COUNT(*) AS total_visitas
+FROM visitas v
+JOIN cat c ON v.id_cat = c.id_cat
+GROUP BY c.cat
+ORDER BY total_visitas DESC;
+
+⦁	Pasajeros en cada CAT
+SELECT c.cat, SUM(v.pasajeros) AS total_pasajeros
+FROM visitas v
+JOIN cat c ON v.id_cat = c.id_cat
+GROUP BY c.cat
+ORDER BY total_pasajeros DESC;
+ 
+⦁	¿Qué CAT recibió más pasajeros?
+Florida: concentra 1.812 pasajeros
+
+
+## Parte 4 – (Modelo Relacional)
+  
+⦁	Mostrar cada Punto CAT junto con el barrio donde se encuentra.
+SELECT c.cat, b.barrio
+FROM cat c
+JOIN barrios b ON c.id_barrio = b.id_barrio
+ORDER BY c.cat ASC;  
+
+⦁	Mostrar cada Punto CAT, su barrio y su comuna.
+SELECT c.cat, b.barrio, co.comuna
+FROM cat c
+JOIN barrios b ON c.id_barrio = b.id_barrio
+JOIN comunas co ON b.id_comuna = co.id_comuna
+ORDER BY c.cat ASC;  
+
+⦁	¿Cuántos CAT hay por comuna?
+SELECT co.comuna, COUNT(*) AS cat_por_comuna
+FROM cat c
+JOIN barrios b ON c.id_barrio = b.id_barrio
+JOIN comunas co ON b.id_comuna = co.id_comuna
+GROUP BY co.comuna
+ORDER BY cat_por_comuna DESC; 
+
+⦁	¿Cuántas visitas recibió cada comuna?
+SELECT co.comuna, COUNT(*) AS cantidad_visitas
+FROM visitas v
+JOIN comunas co ON v.id_comuna = co.id_comuna
+GROUP BY co.comuna
+ORDER BY cantidad_visitas DESC; 
+ 
+⦁	¿Cuántos pasajeros corresponden a cada comuna?
+SELECT co.comuna, SUM(v.pasajeros) AS cantidad_pasajeros
+FROM visitas v
+JOIN comunas co ON v.id_comuna = co.id_comuna
+GROUP BY co.comuna
+ORDER BY cantidad_pasajeros DESC;  
+
+⦁	¿De qué país son las consultas?
+SELECT co.comuna, p.pais, SUM(v.pasajeros) AS cant_pasajeros
+FROM visitas v
+JOIN comunas co ON v.id_comuna = co.id_comuna
+JOIN paises p ON v.id_pais = p.id_pais
+GROUP BY co.comuna, p.pais
+ORDER BY co.comuna, cant_pasajeros DESC;    
+
+⦁	Mostrar cuántos registros de visitas corresponden a cada combinación de país y Punto CAT.
+SELECT p.pais, c.cat, COUNT(*) AS cant_visitas
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+JOIN cat c ON v.id_cat = c.id_cat
+GROUP BY p.pais, c.cat
+ORDER BY cant_visitas DESC;
+
+⦁	Mostrar los países que registran más de 100 visitas.
+SELECT p.pais, COUNT(*) AS cant_visitas
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+GROUP BY p.pais
+HAVING COUNT(*) > 100
+ORDER BY cant_visitas DESC;
+
+## Parte 5 – CASE Crear una nueva columna llamada categoria que clasifique los países según la cantidad de visitas registradas:
+⦁	"Baja" → menos de 20 visitas 
+⦁	"Media" → entre 20 y 50 visitas 
+⦁	"Alta" → más de 50 visitas. 
+  
+SELECT p.pais, COUNT(*) AS cantidad_visitas,
+    CASE
+    WHEN COUNT(*) < 20 THEN 'Baja'
+    WHEN COUNT(*) BETWEEN 20 AND 50 THEN 'Media'
+    ELSE 'Alta'
+    END AS categoria
+FROM visitas v
+JOIN paises p ON v.id_pais = p.id_pais
+GROUP BY p.pais 
+ORDER BY cantidad_visitas DESC;
+
+
+
+ 
+
+
+
+
+

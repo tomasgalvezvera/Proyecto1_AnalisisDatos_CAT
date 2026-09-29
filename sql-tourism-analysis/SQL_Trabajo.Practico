@@ -199,6 +199,8 @@ JOIN paises p ON v.id_pais = p.id_pais
 GROUP BY p.pais 
 ORDER BY cantidad_visitas DESC;
 
+## LINK TRABAJO PRACTICO: sql-tourism-analysis/SQL_Trabajo_Practico.docx
+
 
 
  

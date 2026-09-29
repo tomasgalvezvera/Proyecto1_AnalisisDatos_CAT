@@ -2,57 +2,81 @@
 
 # 🏙️ Turismo CABA: Prestigio Internacional vs. Demanda Operativa Real
 
-> Un análisis de datos aplicado sobre 340.000+ registros de atención turística en la Ciudad de Buenos Aires, enfocado en ingeniería de datos, limpieza de fuentes públicas y visualización para toma de decisiones.
+> Análisis de datos aplicado sobre más de 340.000 registros de atención turística en la Ciudad de Buenos Aires, con foco en Orden, limpieza de fuentes públicas y visualización para la toma de decisiones.
 
 ---
 
-## 🎯 1. Presentación del Problema & Métrica Principal
+## 📌 Resumen del proyecto
 
-Buenos Aires fue distinguida internacionalmente por la revista Wanderlust por sus atributos culturales (tango, gastronomía, barrios)[cite: 1]. Sin embargo, los registros reales de los Centros de Atención Turística (CAT) revelan la dinámica operativa diaria del visitante[cite: 1].
+| | |
+|---|---|
+| **Fuente** | Registros de los Centros de Atención Turística (CAT) de la Ciudad de Buenos Aires |
+| **Período analizado** | 2016-2019 (Módulo 1) · 2017-2018 (Módulo 3) |
+| **Herramientas** | Looker Studio, Excel, SQL, Python (Pandas), Power BI (DAX) |
+| **Enfoque** | Limpieza de datos, modelado relacional, ETL y visualización ejecutiva |
 
-### 📊 Hallazgo Final Depurado (Segmentación de Demanda)
-Tras depurar la base de datos oficial (174.812 registros / 360.209 pasajeros)[cite: 4], la demanda presencial se distribuye de la siguiente manera:
-
-* 🌍 **Turismo Internacional:** Concentra el **57,3% de las consultas** (100.103 registros) y el **60,2% de los pasajeros totales** (216.764 personas)[cite: 4].
-* 🇦🇷 **Turismo Nacional:** Representa el **41,8% de las consultas** (73.139 registros) y el **38,5% de los pasajeros** (138.829 personas)[cite: 4].
-* ❓ **Sin Dato / No especificado:** Reducido al **0,9%** gracias al pipeline de limpieza[cite: 4].
-
-**Conclusión Clave:** La demanda operativa en los CAT está dominada por el turismo internacional de conectividad regional, con una fuerte presencia de turismo interno (4 de cada 10 visitantes) que exige un soporte de orientación predominantemente logístico (mapas y transporte)[cite: 1, 4].
+> **Nota metodológica:** el proyecto trabaja con dos recortes de la base. El análisis descriptivo inicial (Módulo 1) utiliza 341.700 registros del período 2016-2019, mientras que el pipeline de limpieza (Módulo 3) procesa 174.812 encuestas de 2017-2018. Los resultados de la sección 1 corresponden a este último.
 
 ---
 
-## 🧹 2. Limpieza de Datos y Diagnóstico de Calidad (Data Hygiene)
+## 🎯 1. Planteo del problema y métrica principal
 
-El valor técnico principal del proyecto reside en la transformación de datos públicos desordenados e inestables en una base limpia y modelada para análisis de negocio:
+Buenos Aires fue distinguida internacionalmente por la revista *Wanderlust* por sus atributos culturales: tango, gastronomía y barrios. Sin embargo, los registros reales de los CAT revelan la dinámica operativa diaria del visitante.
 
-* **Unificación de Procedencia Dispersa:** La procedencia del turista estaba fragmentada en tres campos distintos (`pais_residencia_si_extranjero`, `otro_pais_residencia_si_extranjero` y `provincia_residencia_si_argentino`)[cite: 4]. Se diseñó un algoritmo de consolidación jerárquica en Python para asignar el origen exacto y reducir los valores nulos al mínimo[cite: 4].
-* **Auditoría de Inconsistencias Territoriales (SQL):** Se identificó que la *Comuna 4* registraba visitas y pasajeros pero no poseía ningún punto CAT físico registrado en la tabla de infraestructura, documentando la anomalía para el pipeline ETL[cite: 3].
-* **Depuración de Duplicados Sintácticos:** Normalización de nombres de países duplicados por espacios o variantes de tipeo (ej. *Finlandia*, *Holanda* / *Países Bajos*)[cite: 3].
+### 📊 Hallazgo final depurado: segmentación de la demanda
+
+Tras depurar la base de datos oficial (**174.812 registros / 360.209 pasajeros**), la demanda presencial se distribuye de la siguiente manera:
+
+| Segmento | % de consultas | Registros | % de pasajeros | Pasajeros |
+|---|---|---|---|---|
+| 🌍 **Turismo internacional** | **57,3%** | 100.103 | **60,2%** | 216.764 |
+| 🇦🇷 **Turismo nacional** | **41,8%** | 73.139 | **38,5%** | 138.829 |
+| ❓ **Sin dato / no especificado** | **0,9%** | — | — | — |
+
+El porcentaje de "Sin dato" se redujo al 0,9% gracias al pipeline de limpieza.
+
+### 💡 Conclusión clave
+
+La demanda operativa en los CAT está dominada por el turismo internacional de conectividad regional, con una fuerte presencia de turismo interno (4 de cada 10 visitantes). Esto exige un soporte de orientación predominantemente logístico, centrado en mapas y transporte.
 
 ---
 
-## 🛠️ 3. Evolución del Proyecto en 4 Módulos Técnicos
+## 🧹 2. Limpieza de datos y diagnóstico de calidad (*Data Hygiene*)
 
-### 🟢 Módulo 1: Análisis Descriptivo Inicial (Looker Studio + Excel)
-* **Objetivo:** Comparación de la hipótesis de posicionamiento internacional (Wanderlust) frente a la demanda operativa real 2016-2019 (341.700 registros)[cite: 1, 2].
-* **Entregable:** Dashboard interactivo enfocado en la brecha entre consultas logísticas y culturales[cite: 1].
-* 🔗 [Ver Dashboard Interactivo](https://datastudio.google.com/reporting/7210dc12-294b-4bff-aedd-70c684c9fb97) | 🔗 [Publicación en LinkedIn](https://www.linkedin.com/posts/tomasggalvezvera_prestigio-internacional-vs-datos-reales-ugcPost-7482594738542632960-fFCJ/)
+El principal valor técnico del proyecto es la transformación de datos públicos desordenados e inestables en una base limpia y modelada para el análisis de negocio.
 
-### 🔵 Módulo 2: Modelado Relacional y Consultas Avanzadas (SQL) *En Desarrollo*
-* **Objetivo:** Estructuración de datos planos en un modelo de 5 tablas (`visitas`, `cat`, `barrios`, `comunas`, `paises`)[cite: 3].
-* **Habilidades Demostradas:**
-  * Uso de `JOIN` multinivel para relacionar entidades geográficas y de atención[cite: 3].
-  * Clasificación de países por volumen (`Alta`, `Media`, `Baja`) mediante `CASE`[cite: 3].
-  * Agregaciones con `GROUP BY` y `HAVING` para identificar nodos de saturación (CAT Florida / Comuna 1)[cite: 1, 3].
-* 📁 [`/sql/trabajo_practico_sql.sql`](./sql/)
+- **Unificación de procedencia dispersa:** la procedencia del turista estaba fragmentada en tres campos distintos (`pais_residencia_si_extranjero`, `otro_pais_residencia_si_extranjero` y `provincia_residencia_si_argentino`). Se diseñó un algoritmo de consolidación jerárquica en Python que asigna el origen exacto y reduce los valores nulos al mínimo.
+- **Auditoría de inconsistencias territoriales (SQL):** se identificó que la *Comuna 4* registraba visitas y pasajeros pero no tenía ningún punto CAT físico en la tabla de infraestructura. La anomalía quedó documentada para el pipeline ETL.
+- **Depuración de duplicados sintácticos:** normalización de nombres de países duplicados por espacios o variantes de tipeo y denominación (ej. *Finlandia*, *Holanda* / *Países Bajos*).
 
-### 🟡 Módulo 3: Pipeline de Limpieza y ETL (Python / Pandas) *En Desarrollo*
-* **Objetivo:** Procesamiento automatizado de 174.812 encuestas (2017-2018)[cite: 4].
-* **Habilidades Demostradas:**
-  * Tratamiento de nulos con reemplazos condicionales (`.replace()`, `.fillna()`, `.loc[]`)[cite: 4].
-  * Creación de banderas sintéticas de análisis (`tipo_visitante`: *Nacional* vs. *Internacional*)[cite: 4].
-  * Exportación de dataset depurado `cat_buenos_aires_limpio.csv`[cite: 4].
-* 📁 [`/python/analisis_cat.py`](./python/)
+---
 
-### 🔴 Módulo 4: Visualización Ejecutiva & DAX (Power BI) — *En Desarrollo*
-* **Objetivo:** Consolidación final utilizando modelo en estrella y métricas dinámicas DAX para presentar a stakeholders no técnicos.
+## 🛠️ 3. Evolución del proyecto en 4 módulos técnicos
+
+### 🟢 Módulo 1: Análisis descriptivo inicial (Looker Studio + Excel)
+
+- **Objetivo:** contrastar la hipótesis de posicionamiento internacional (*Wanderlust*) con la demanda operativa real 2016-2019 (341.700 registros).
+- **Entregable:** dashboard interactivo enfocado en la brecha entre consultas logísticas y culturales.
+- 🔗 [Ver dashboard interactivo](https://datastudio.google.com/reporting/7210dc12-294b-4bff-aedd-70c684c9fb97) · 🔗 [Publicación en LinkedIn](https://www.linkedin.com/posts/tomasggalvezvera_prestigio-internacional-vs-datos-reales-ugcPost-7482594738542632960-fFCJ/)
+
+### 🔵 Módulo 2: Modelado relacional y consultas avanzadas (SQL) — *En desarrollo*
+
+- **Objetivo:** estructurar datos planos en un modelo de 5 tablas (`visitas`, `cat`, `barrios`, `comunas`, `paises`).
+- **Habilidades demostradas:**
+  - `JOIN` multinivel para relacionar entidades geográficas y de atención.
+  - Clasificación de países por volumen (`Alta`, `Media`, `Baja`) mediante `CASE`.
+  - Agregaciones con `GROUP BY` y `HAVING` para identificar nodos de saturación (CAT Florida / Comuna 1).
+- 📁 [`/sql/trabajo_practico_sql.sql`](./sql/)
+
+### 🟡 Módulo 3: Pipeline de limpieza y ETL (Python / Pandas) — *En desarrollo*
+
+- **Objetivo:** procesamiento automatizado de 174.812 encuestas (2017-2018).
+- **Habilidades demostradas:**
+  - Tratamiento de nulos con reemplazos condicionales (`.replace()`, `.fillna()`, `.loc[]`).
+  - Creación de variables sintéticas de análisis (`tipo_visitante`: *Nacional* vs. *Internacional*).
+  - Exportación del dataset depurado `cat_buenos_aires_limpio.csv`.
+- 📁 [`/python/analisis_cat.py`](./python/)
+
+### 🔴 Módulo 4: Visualización ejecutiva y DAX (Power BI) — *En desarrollo*
+
+- **Objetivo:** consolidación final mediante un modelo en estrella y métricas dinámicas en DAX, orientada a presentar resultados a stakeholders no técnicos.
